@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <h1><%= semester %> <%= year %></h1>
+        <ul>
+            <% courses.map((course, index) => { %>
+                <li>
+                    <h2><%= course.name %></h2>
+                    <h2><%= course.description %></h2>
+                    <a href="/<%= semester %>/<%= year %>/<%= course.id %>">Click here for more info</a>
+                </li>
+            <% }); %>
+        </ul>
+    </div>
+</body>
+</html>
