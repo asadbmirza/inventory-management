@@ -39,7 +39,6 @@ async function getCourse(req, res, next) {
             throw error;
         }
         console.log(dbCourse);
-
         res.render("course", {course: dbCourse});
 
     } catch(err) {
