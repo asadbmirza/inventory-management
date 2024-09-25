@@ -1,10 +1,11 @@
 const pool = require("./pool");
 
 async function getSemesterId(semester, year) {
-  const {rows} = await pool.query(
-    "SELECT id FROM semesters WHERE semester = $1 AND year = $2", [semester, year]
+  const { rows } = await pool.query(
+    "SELECT id FROM semesters WHERE semester = $1 AND year = $2",
+    [semester, year]
   );
-  return rows[0];
+  return rows[0].id;
 }
 
 async function getSemester(semester = "", year = "") {
@@ -16,9 +17,7 @@ async function getSemester(semester = "", year = "") {
 }
 
 async function getSemesters() {
-  const { rows } = await pool.query(
-    "SELECT * FROM semesters"
-  );
+  const { rows } = await pool.query("SELECT * FROM semesters");
   return rows;
 }
 
@@ -31,9 +30,10 @@ async function getCourses(semester = "", year = "") {
 }
 
 async function getCourse(semester, year, course_id) {
-  const { rows } = await pool.query("SELECT * FROM courses JOIN semesters ON courses.semester_id = semesters.id WHERE courses.id = $1 AND semester = $2 AND year = $3", [
-    course_id, semester, year
-  ]);
+  const { rows } = await pool.query(
+    "SELECT * FROM courses JOIN semesters ON courses.semester_id = semesters.id WHERE courses.id = $1 AND semester = $2 AND year = $3",
+    [course_id, semester, year]
+  );
   return rows[0];
 }
 
@@ -42,8 +42,10 @@ async function deleteCourse(course_id) {
 }
 
 async function deleteSemester(semester, year) {
-  const semester_id = await getSemesterId(semester, year);
-  await pool.query("DELETE FROM semesters WHERE semesters.id = $1", [semester_id]);
+  const id = await getSemesterId(semester, year);
+  await pool.query("DELETE FROM semesters WHERE semesters.id = $1", [
+    id,
+  ]);
   await pool.query("DELETE FROM courses WHERE semester_id = $1", [semester_id]);
 }
 
@@ -67,4 +69,29 @@ async function insertCourse(course) {
   );
 }
 
-module.exports = { getSemester, getSemesters, getCourses, getCourse , deleteCourse, deleteSemester};
+async function updateCourse(course_id, name, description, code) {
+  await pool.query(
+    "UPDATE courses SET name = $2, description = $3, code = $4 WHERE id = $1",
+    [course_id, name, description, code]
+  );
+}
+
+async function updateSemester(semester_id, semester, year) {
+  await pool.query(
+      "UPDATE semesters SET semester = $1, year = $2 WHERE id = $3",
+      [semester, year, semester_id]
+  );
+
+}
+
+module.exports = {
+  getSemesterId,
+  getSemester,
+  getSemesters,
+  getCourses,
+  getCourse,
+  deleteCourse,
+  deleteSemester,
+  updateCourse,
+  updateSemester,
+};

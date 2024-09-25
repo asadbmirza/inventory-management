@@ -9,7 +9,6 @@ async function getSemester(req, res, next) {
 
         const dbSemester = await db.getSemester(semester, year);
         const dbCourses = await db.getCourses(semester, year);
-        console.log(dbCourses)
         if (!dbSemester) {
             const error = new Error("Semester Not Found");
             error.status = 404;
@@ -38,7 +37,6 @@ async function getCourse(req, res, next) {
             error.status = 404;
             throw error;
         }
-        console.log(dbCourse);
         res.render("course", {course: dbCourse});
 
     } catch(err) {
